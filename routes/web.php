@@ -32,6 +32,17 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-// Admin and User Dashboard Routes
-Route::get('/admindashboard',[AdminDashboardController::class, 'admindashboard'])->name('admin.dashboard');
-Route::get('/userdashboard',[UserDashboardController::class, 'userdashboard'])->name('admin.dashboard');
+
+
+// Middleware for Role-based Access Control
+
+Route::middleware(['auth', 'roles:admin'])->group(function () {
+    // Admin specific routes can be added here
+    Route::get('/admindashboard',[AdminDashboardController::class, 'admindashboard'])->name('admin.dashboard');
+
+});
+
+Route::middleware(['auth', 'roles:user'])->group(function () {
+    // User specific routes can be added here
+    Route::get('/userdashboard',[UserDashboardController::class, 'userdashboard'])->name('user.dashboard');
+});
